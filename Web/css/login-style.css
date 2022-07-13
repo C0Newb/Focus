@@ -1,0 +1,125 @@
+@charset "utf-8";
+/* CSS Document */
+
+#login-container {
+    height: 50%;
+    width: 50%;
+    min-width: 350px;
+    min-height: 420px;
+    max-width: 650px;
+    max-height: 420px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+	
+	margin-top: 15px;
+	margin-bottom: 15px;
+	
+    transform: translate(-50%, -50%);
+    background-color: rgba(50,50,50,0.5);
+    -webkit-box-shadow: 0px 0px 15px .5px;
+    box-shadow: 0px 0px 15px .5px;
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    z-index: 10;
+    border-radius: 10px;
+}
+#register-container {
+    height: 50%;
+    width: 50%;
+    min-width: 350px;
+    min-height: 600px;
+    max-width: 650px;
+    max-height: 600px;
+	
+	margin-top: 15px;
+	margin-bottom: 15px;
+	
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(50,50,50,0.5);
+    -webkit-box-shadow: 0px 0px 15px .5px;
+    box-shadow: 0px 0px 15px .5px;
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    z-index: 10;
+    border-radius: 10px;
+}
+
+form {
+	position: relative;
+	top: 50%;
+	left: 50%;
+    transform: translate(-50%, -50%);
+}
+.center {
+	position: relative;
+	left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    margin-top: 10px;
+}
+a {
+    color: #DBDBDB;
+}
+
+#login-header {
+    color: #DBDBDB;
+	text-align: center;
+}
+
+#login-message {
+	color: #D50000;
+	text-align: center;
+	width: 100%;
+	display: block;
+}
+
+#sendoff {
+	width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+	color: #DBDBDB;
+}
+
+.mdl-textfield__label {
+	color: #DBDBDB;
+}
+
+.login-input {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.login-input--halfed {
+    width: 42%;
+}
+.login-input--left {
+	float: left;
+    margin-left: 5%;
+	margin-right: auto;
+}
+.login-input--right {
+	float: right;
+	margin-left: auto;
+    margin-right: 5%;
+}
+
+.mdl-textfield__input, select, textarea {
+	color: #DEDEDE;
+}
+
+textarea:focus, input:focus {
+    color: #DEDEDE;
+}
+
+#login-bg {
+    height: 100%;
+    width: 100%;
+    background-image: url(https://resources.cnewb.co/cnco.focus/Images/login.jpg);
+    background-repeat: no-repeat;
+	background-size: cover;
+}

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Dashboard - CNCO Photos</title>
+		
+		<!-- Google MDL -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+
+
+		<!-- Bootstrap -->
+<!--		<link href="css/bootstrap-4.3.1.css" rel="stylesheet"/>-->
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+
+		<!-- Provide a short description of the page. -->
+		<meta name="description" content="Dashboard - CNCO Photos">
+
+		<!-- Open Graph Meta Tags -->
+		<!-- Set the canonical URL for the page you are sharing. -->
+		<meta property="og:url" content="https://cnewb.co/Photos/">
+		<!-- The title to accompany the URL. -->
+		<meta property="og:title" content="CNCO: Photos"/>
+		<!-- Provides Facebook the name that you would like your website to be recognized by. -->
+		<meta property="og:site_name" content="CNCO Photos">
+		<!-- Provides Facebook the type of website that you would like your website to be categorized by. -->
+		<meta property="og:type" content="photography">
+		<!-- Defines the language, American English is the default. -->
+		<meta property="og:locale" content="en-US">
+		<!-- Directs Facebook to use the specified image when the page is shared. -->
+		<meta property="og:image" content="https://resources.cnewb.co/cnco.one/Images/About.jpg">
+		<!-- Similar to the meta description tag in HTML. This description is shown below the link title on Facebook. -->
+		<meta property="og:description" content="Cody Newberry - Photos"/>
+
+		<!-- Twitter Card data -->
+		<!-- The type of card to be created: summary, photo, or video -->
+		<meta name="twitter:card" content="summary" />
+		<!-- Title of the Twitter Card -->
+		<meta name="twitter:title" content="Cody Newberry - Photos" />
+		<!-- Description of content -->
+		<meta name="twitter:description" content="" />
+		<!-- URL of image to use in the card. Used with summary, summary_large_image, player cards -->
+		<meta name="twitter:image" content="https://resources.cnewb.co/cnco.one/Images/About.jpg" />		
+</head>
+	<body>		
+		<!-- The fixed navbar will overlay your other content, unless you add padding to the bottom of the <body>. Tip: By default, the navbar is 50px high.  -->
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+	  		<header class="mdl-layout__header">
+				<div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="material-icons"></i></div>
+				<div class="mdl-layout__header-row">
+		  			<!-- Title -->
+		  			<span class="mdl-layout-title" id="section-title">Dashboard</span>
+					<!-- Add spacer, to align navigation to the right -->
+					<div class="mdl-layout-spacer"></div>
+
+		  			<!-- Navigation. We hide it in small screens. -->
+		  			<nav class="mdl-navigation">
+						<!-- Right aligned menu below button -->
+						<span id="username-label"></span>
+						<div style="margin-left: 10px;"/>
+						<button id="account-menu" class="mdl-button mdl-js-button mdl-button--icon">
+							<i class="material-icons">account_circle</i>
+						</button>
+
+						<ul id="account-menu-loggedout" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="account-menu">
+							<li class="mdl-menu__item" onclick="location.href='https://cnewb.co/Photos/login'"><a class="hide-link" href="login">Login</a></li>
+						</ul>
+					  	<ul id="account-menu-loggedin" hidden disabled class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="account-menu">
+						  	<li class="mdl-menu__item"><a class="hide-link" href="myaccount">My Account</a></li>
+							<li class="mdl-menu__item" onclick="location.href='https://cnewb.co/Photos/logout'"><a class="hide-link" href="logout">Logout</a></li>
+						</ul>
+		  			</nav>
+				</div>
+	  		</header>
+			
+	  		<div class="mdl-layout__drawer drawer">
+<!--				<span class="mdl-layout-title drawer-title"></span>-->
+				<nav class="mdl-navigation drawer-nav">
+					<div style="height: 25px;"></div>
+		  			<button class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect" onclick="loadShoots();">
+						<a class="hide-link" href="#">View public shoots</a>
+					</button>
+					<div style="height: 25px;"></div>
+					<button class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect" id="my-shoots-btn" onclick="loadShoots(true);">
+						<a class="hide-link" href="#">My shoots</a>
+					</button>
+					<div style="height: 25px;"></div>
+					<button class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect" onclick="displayUploadContainer();">
+						<a class="hide-link" href="#">Upload</a>
+					</button>
+				</nav>
+
+				<!-- Home button -->
+				<button id="home-button" style="width: 100%; bottom: 10px; position: absolute;" class="back-button mdl-button mdl-js-button mdl-js-ripple-effect" onclick="goHome()">
+					<i class="material-icons">home</i>
+				</button>
+	  		</div>
+			
+	  		<main class="mdl-layout__content" style="height: 100%; width: 100%;">
+		  		<div class="page-content" style="height: 100%; width: 100%;">
+					
+					<div id="toast-notification" class="mdl-js-snackbar mdl-snackbar" style="z-index: 50; text-align: center;">
+						<div class="mdl-snackbar__text"></div>
+						<button class="mdl-snackbar__action" type="button"></button>
+					</div>
+					
+			  		<div class="dashboard-bg"/>
+					<div id="content-host" class="card align--right">
+						<button id="back-button" class="back-button mdl-button mdl-js-button mdl-js-ripple-effect" onclick="history.back()">
+						  <i class="material-icons">arrow_back</i>
+						</button>
+						<ul id="shoots-container">
+							<!-- This is an entry like a shoot. Just a thumbnail with the title. When clicked it opens the shoot -->
+							<!-- <li id="shoot_exampleShoot" class="entry">
+								<div class="entry-photo" style="background-image: url('image-not-found.jpg');"/>
+								<div class="entry-title">
+									<span>Example shoot</span>
+								</div>
+							</li> -->
+						</ul>
+						<!-- Pictures, text, etc goes here. -->
+						<ul style="display: none;" id="shoot-container">
+							<!-- <li id="shoot_exampleShoot-photo_1" class="entry">
+								<div class="entry-photo--no-title" style="background-size: cover; background-image: url('images/testing/abc.medium');"/>
+							</li>
+							<li id="shoot_exampleShoot-photo_2" class="entry-vertical">
+								<div class="entry-photo--no-title" style="background-size: cover; background-image: url('images/testing/bbb.medium');"/>
+							</li> -->
+						</ul>
+
+						<div style="display: none;" id="image-container">
+							<!-- <img id="image-container-image" src='images/testing/abc.medium'></img> -->
+						</div>
+						
+						<div style="display: none;" id="upload-container">
+							<form id="upload-form" action="upload/endpoint" method="post" enctype="multipart/form-data">
+								<div style="height: 25px;"></div>
+
+								
+								
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label upload-stretch upload-input">
+									<input class="mdl-textfield__input" type="text" id="upload-shootID" name="shootID" pattern="[a-zA-Z0-9]{1,50}" required>
+									<label class="mdl-textfield__label" for="shooID">Shoot ID</label>
+									<span class="mdl-textfield__error" for="shootID" id="upload-shootID-error">ShootID's can only be alphanumerical, no spaces, and between 1-50 characters.</span>
+								</div>
+								<br/>
+								<div style="height: 20px;"></div>
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label upload-stretch upload-input">
+									<input class="mdl-textfield__input" type="text" id="upload-title" name="title" pattern=".{1,100}" required>
+									<label class="mdl-textfield__label" for="title">Shoot title</label>
+									<span class="mdl-textfield__error" for="title" id="upload-title-error">Titles must be between 1-100 characters.</span>
+								</div>
+								
+								<br/>
+								<div style="height: 20px;"></div>
+								<h6 style="text-align: center;">Upload visibility</h6>
+								<br/>
+								<label class="upload-stretch mdl-radio mdl-js-radio mdl-js-ripple-effect" for="visibility-private">
+									<input type="radio" id="visibility-private" class="mdl-radio__button" name="visibility" value="private" checked>
+									<span class="mdl-radio__label">Private</span>
+								</label>
+								<br/>
+								<label class="upload-stretch mdl-radio mdl-js-radio mdl-js-ripple-effect" for="visibility-public">
+									<input type="radio" id="visibility-public" class="mdl-radio__button" name="visibility" value="public">
+									<span class="mdl-radio__label">Public</span>
+								</label>
+
+								<br/>
+								<div style="height: 20px;"></div>
+								<input id="uploadSendoff" value="Upload" type="submit" class="upload-stretch mdl-button mdl-js-button mdl-js-ripple-effect"/>
+								
+								<div style="height: 35px;"></div>
+								<div id="upload-progress" class="mdl-progress mdl-js-progress upload-stretch" hidden></div>
+								<div style="height: 15px;"></div>
+
+								<ul id="upload-preview"> <!-- This is a clone of the shoot-container :) -->
+								</ul>
+								
+								<input id="fileElement" type="file" name="images" value="images" multiple accept="image/*" onchange="handleFiles(this.files)">
+							</form>
+							
+							
+						</div>
+						
+						<div id="content-loader" style="display: none;">
+							<span id="content-loadingText">Setting up...</span>
+						</div>
+					</div>
+		  		</div>
+	  		</main>
+		</div>
+	
+		<div hidden id="loader">
+			<img id="loader-image" src="images/loader.gif" alt="Loading animation."/>
+			<span id="loadingText">Setting up...</span>
+		</div>
+		
+		<!-- Random images on the homescreen -->
+		<script src="js/focus.js"></script>
+	
+		<!-- Google MDL -->
+		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+		
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+		<script src="js/jquery-3.3.1.min.js"></script>
+
+   		<!-- Include all compiled plugins (below), or include individual files as needed --> 
+<!--		<script src="js/popper.min.js"></script>-->
+<!--   		<script src="js/bootstrap-4.3.1.js"></script>-->
+		
+		<script>
+			const hostURL = "http://localhost:25560"; // Example, https://s.cnewb.co/API (include the SubURL here)
+			const hostSubURL = ""; // Example, /API
+
+			const defaultDrawer = $('.drawer-nav').html(); // Use later when we have to re-render it
+
+			window.addEventListener("load", function() {
+				$('.mdl-layout__drawer-button').on('click',function(event) {
+					if ($(".mdl-layout__drawer").hasClass("is-visible")) { // This is ran BEFORE the class is updated
+						$("#content-host").removeClass("ch-drawerOut");
+					} else {
+						$("#content-host").addClass("ch-drawerOut");
+					}
+
+				});
+				$('.mdl-layout__obfuscator').on('click', function(event) {
+					$("#content-host").removeClass("ch-drawerOut");
+				});
+				
+				setTimeout(function() {
+					//$('.mdl-layout__drawer-button').click();
+				}, 1000);
+				
+				history.replaceState({
+						view: "shoots-container",
+	  					title: "Dashboard"
+					}, document.title, document.location.href);
+			});
+			
+			$(window).bind("popstate", function(event) {
+				var state = history.state;
+				if (state != null){
+					if (window.cancelImageLoad != undefined)
+						window.cancelImageLoad();
+					if ('container' in state){
+						$("#content-host").html(state.container);
+					}
+					if ('title' in state) {
+						$('#section-title').html(state.title);
+						document.title = state.title + " - CNCO Photos";
+					}
+					if ('view' in state) {
+						$('#shoots-container').fadeOut(250);
+						$('#shoot-container').fadeOut(250);
+						$("#upload-container").fadeOut(250);
+						$("#image-container").fadeOut(250);
+						$("#back-button").removeClass("back-button-white");
+
+						setTimeout(function() {
+							$('#' + state.view).fadeIn(250);
+						}, 250);
+
+
+						if (state.drawer)
+							$(".drawer-nav").html(state.drawer);
+
+						if (state.view == 'shoots-container') {
+							$("#back-button").hide(0);
+							$('.drawer-nav').empty();
+							$('.drawer-nav').html(defaultDrawer);
+						} else if (state.view == "image-container") {
+							$("#back-button").addClass("back-button-white");
+						}
+					}
+				}
+				
+			});
+
+			function goHome() {
+				history.replaceState({
+					view: "shoots-container",
+	  				title: "Dashboard"
+				}, document.title, document.location.href);
+
+				$("#back-button").hide(0);
+				$('.drawer-nav').empty();
+				$('.drawer-nav').html(defaultDrawer);
+				$('#shoot-container').fadeOut(250);
+				$("#image-container").fadeOut(250);
+				$("#upload-container").fadeOut(250);
+				$("#back-button").removeClass("back-button-white");
+
+				setTimeout(function() {
+					$('#shoots-container').fadeIn(250);
+				}, 250);
+			}
+
+			displayUploadContainer(); // lazy
+
+			// Update username at the top
+			$.ajax({
+				url: hostURL + "/user/myInfo",
+				method: "POST",
+				success: (a) => {
+					a = a.split('\n');
+					a = JSON.parse(a[1]);
+
+					console.log(a);
+					if (a.loggedIn == false || a.username == undefined) {
+						console.log("[User] User not logged in.");
+						$('#my-shoots-btn').hide();
+						$('#my-shoots-btn').attr("disabled",true);
+					} else {
+						console.log("[User] User currently logged in: " + a.username);
+
+						$('#my-shoots-btn').show();
+						$('#my-shoots-btn').attr("disabled",false);
+
+						window.user = a;
+						if (a.firstName != "undefined" || a.firstName != undefined)
+							$("#username-label").text(a.firstName);
+						else
+							$("#username-label").text(a.username);
+
+						$("#account-menu-loggedin").attr("hidden", false);
+						$("#account-menu-loggedout").attr("hidden", true);
+					}
+				},
+			});
+
+
+			
+			downloadShoot = function(shootName) {
+				console.log("[Zip DL] Downloading shoot: " + shootName);
+				window.open(hostURL + '/zip/' + shootName + '/quality/original');
+			}
+			downloadImage = function(shootID, imageID) {
+				console.log("[Image DL] Shoot: " + shootID + " || imageID: " + imageID);
+				window.open(hostURL + '/image-dl/' + shootID + '/' + imageID + '.original');
+			}
+			shareShoot = function(shootName) {
+				console.log("Opening share page for shoot: " + shootName);
+			}
+			manageShoot = function(shootName) {
+				console.log("Opening manage page for shoot: " + shootName);
+			}
+			
+			window.cacheImages = {}; // Image tags (cache)
+			window.loadedImages = {}; // True/False if image loaded
+			
+			function getCurrentView() {
+				if ($("#shoots-container").css('display') != "none") {
+					console.log("Current view: shoots-container");
+					return "shoots-container";
+				} else if ($("#shoot-container").css('display') != "none") {
+					console.log("Current view: shoot-container");
+					return "shoot-container";
+				} else {
+					console.log("Current view: image-container");
+					return "image-container"
+				}
+			}
+
+			function displayShoot(title, shootName, images) {
+				// Change sidebar buttons
+				var buttonLH = 'class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect"></button>';
+				var linkLH = 'class="hide-link" href="#"></a>';
+				
+				$('.drawer-nav').empty();
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="download-button" ' + buttonLH);
+				$("#download-button").on('click', function() {
+					downloadShoot(shootName);
+				}).append('<a id="download-button_link" ' + 'class="hide-link" href="zip/' + shootName + '/quality/original"></a>');
+				$('#download-button_link').text("Download");
+				
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="share-button" ' + buttonLH);
+				$("#share-button").on('click', function() {
+					shareShoot(shootName);
+				}).append('<a id="share-button_link" ' + linkLH);
+				$('#share-button_link').text("Share");
+				
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="manage-button" ' + buttonLH);
+				$("#manage-button").on('click', function() {
+					manageShoot(shootName);
+				}).append('<a id="manage-button_link" ' + linkLH);
+				$('#manage-button_link').text("Manage");
+
+				history.pushState({ view:'shoot-container', title:title, drawer:$(".drawer-nav").html() }, ''); // what we are going to be looking at
+
+
+				$("#content-loader").fadeIn(250); // loading screen
+				if (images.length == 1)
+					$("#content-loadingText").text("Loading image (0/" + images.length + ")");
+				else
+					$("#content-loadingText").text("Loading images (0/" + images.length + ")");
+				
+				setTimeout(function() {
+					$("#section-title").text(title); // Change title
+					document.title = title + " - CNCO Photos";
+
+					// Hide old elements
+					$("#shoot-container").empty();
+					$('#shoots-container').hide();
+					$("#image-container").hide();
+
+					var hitNumber = 0;
+					
+					function addImg(currentImage) {
+						if (currentImage>=images.length || currentImage<0)
+							return;
+						
+						// console.log(currentImage, images.length);
+						
+						var key = shootName + "-photo_" + images[currentImage].title;
+						
+						if (window.cacheImages[key] == undefined) {
+							var image = new Image();
+							image.src = images[currentImage].url;
+							image.className = "entry-photo--no-title";
+							image.loading = "lazy";
+							image.id = images[currentImage].title;
+							image.alt = images[currentImage].title;
+							image.title = images[currentImage].title;
+							image.onclick = (event) => {
+								console.log('[Image] ' + event.currentTarget.id + ' clicked! Opening large view.');
+								displayImage(title + " - " + event.currentTarget.id, shootName, event.currentTarget.id);
+							}
+							window.cacheImages[key] = image;
+							
+							hitNumber += 1;
+							window.loadedImages[key] = true;
+							$("#content-loadingText").text("Setting up images (" + hitNumber + "/" + images.length + ")");
+							addImg(currentImage-1);
+							if (hitNumber==images.length) {
+								$("#shoot-container").show();
+								$("#back-button").show();
+								setTimeout(function() {
+									$("#content-loader").fadeOut(500); // done
+									$("#content-loadingText").text("Setting up...");
+								}, 500);
+							}
+						} else {
+							if (window.loadedImages[key] == true) {
+								hitNumber += 1;
+								addImg(currentImage-1);
+							}
+						}
+						$("#shoot-container").append('<li id="' + key + '" class="entry"></li>');
+						$("#" + key).append(window.cacheImages[key]);
+					}
+					addImg(images.length-1);
+					
+					if (hitNumber==images.length) {
+						$("#shoot-container").show();
+						$("#back-button").show();
+						setTimeout(function() {
+							$("#content-loader").fadeOut(500); // done
+							$("#content-loadingText").text("Loading...");
+							// window.cacheImages = {}; // checking performance
+							// window.loadedImages = {};
+							console.log("Shoot displayed! (ID> " + shootName + ")")
+						}, 500);
+					}
+				}, 300);
+			};
+			
+			function displayImage(title, shootID, imageID) {
+				// Change sidebar buttons
+				var buttonLH = 'class="mdl-navigation__link mdl-button mdl-js-button mdl-js-ripple-effect"></button>';
+				var linkLH = 'class="hide-link" href="#"></a>';
+
+				$("#back-button").addClass("back-button-white");
+				
+				$('.drawer-nav').empty();
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="download-button" ' + buttonLH);
+				$("#download-button").on('click', function() {
+					downloadImage(shootID, imageID);
+				}).append('<a id="download-button_link" ' + linkLH);
+				$('#download-button_link').text("Download image");
+				
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="manage-button" ' + buttonLH);
+				$("#share-button").on('click', function() {
+					shareShoot(shootName);
+				}).append('<a id="share-button_link" ' + linkLH);
+				$('#share-button_link').text("Share");
+				
+				$('.drawer-nav').append('<div style="height: 25px;"></div>');
+				
+				$('.drawer-nav').append('<button id="manage-button" ' + buttonLH);
+				$("#manage-button").on('click', function() {
+					manageShoot(shootName);
+				}).append('<a id="manage-button_link" ' + linkLH);
+				$('#manage-button_link').text("Manage");
+
+				history.pushState({ view:'image-container', title:title, drawer:$(".drawer-nav").html() }, ''); // what we ARE looking at
+
+
+				$("#content-loader").fadeIn(250); // loading screen
+				$("#content-loadingText").text("Loading image " + imageID);
+
+				setTimeout(function() {
+
+					$("#section-title").text(title); // Change title
+					document.title = title + " - CNCO Photos";
+					
+	
+					// Hide old elements
+					$("#image-container").empty();
+					$('#shoots-container').hide();
+					$('#shoot-container').hide();
+	
+					var hitNumber = 0;
+	
+						
+					// console.log(currentImage, images.length);
+					
+					var tN;
+
+					var image = new Image();
+					window.cancelImageLoad = function() {
+						image.src = "";
+					}
+					image.src = 'images/' + shootID + '/' + imageID + '.medium';
+					image.id = "image-container-image";
+					image.onload = function() { // Image loaded
+						console.log("[displayImage] Image view loaded.")
+						$("#content-loadingText").text("Image loaded!");
+
+						tN = toastNotification('Loading high quality version...', 9999);
+	
+						// Now load a higher quality version of this image
+						var image2 = new Image();
+						window.cancelImageLoad = function() {
+							image2.src = "";
+							tN.hide();
+						}
+						image2.src = 'images/' + shootID + '/' + imageID + '.original';
+						image2.id = "image-container-image";
+						image2.onload = function() {
+							// high quality version loaded. Display.
+							$('#image-container').empty();
+							$("#image-container").append(image2);
+							if (tN!=undefined)
+								tN.hide();
+							toastNotification("High quality image loaded.", 1250);
+
+							window.cancelImageLoad = function() {};
+						}
+
+						$("#image-container").show();
+						$("#back-button").show();
+						setTimeout(function() {
+							$("#content-loader").fadeOut(500); // done
+						}, 500);
+					}
+	
+					$("#image-container").append(image);
+				}, 300);
+			}
+
+
+			// ---------------
+
+
+			 $("#shoot_exampleShoot").on('click', function(event) {
+			 	displayShoot("Example Shoot", "exampleShoot", [{"title": "image1", "url": "images/exampleShoot.jpg"},
+			 								  {"title": "image2", "url": "images/exampleShoot2.jpg"},
+			 								  {"title": "image3", "url": "images/exampleShoot3.jpg"},
+			 								  {"title": "image4", "url": "images/exampleShoot4.jpg"}]);
+			 });
+			
+			$("#shoot_exampleShoot-photo_1").on('click', (event) => {
+				// title, shootID, imageID
+				displayImage("Example Shoot - abc", "testing", "bbb");
+			});
+
+
+			
+			var Shoots = [];
+			
+			function loadShoots(mine) {
+				mine = (mine==true)? true : false;
+
+				$.ajax({
+					url: hostURL + "/shoots",
+					contentType: "application/json; charset=utf-8",
+					method: 'POST',
+					type: 'POST',
+					data: `{ "ownedByMe": ${mine} }`,
+					success: (a) => {
+						a = a.split('\n');
+						a = JSON.parse(a[1]);
+						for (var i = 0; i<a.length; i++) {
+							if (a[i] != undefined)
+								Shoots.push(a[i]); // Clean out nulls
+						}
+						Shoots = a;
+
+						$('#shoots-container').empty();
+						for (var i = 0; i<Shoots.length; i++) {
+							if (Shoots[i] == undefined)
+								continue;
+
+							var title = Shoots[i].title;
+							var id = Shoots[i].id;
+
+							console.log("New shoot: " + id);
+							$('#shoots-container').append(`<li id="${id}" class="entry">
+										<div class="entry-photo" style="background-image: url('${hostURL}/images/${id}/${Shoots[i].images[0]}.low');"/>
+										<div class="entry-title">
+											<span>${title}</span>
+										</div>
+									</li>`);
+
+							Shoots[i].imgs = [];
+							for (var o = 0; o<Shoots[i].images.length; o++) {
+								Shoots[i].imgs.push({
+									title: Shoots[i].images[o],
+									url: 'images/' + id + '/' + Shoots[i].images[o] + ".low"
+								});
+							}
+							
+
+							$('#' + Shoots[i].id).on('click', event => {
+								// id: event.target.id
+								var ourShoot;
+								for (var i = 0; i<Shoots.length; i++) {
+									if (Shoots[i] == undefined)
+										continue;
+
+									if (Shoots[i].id == event.currentTarget.id) {
+										ourShoot = Shoots[i];
+										break;
+									}
+								}
+
+								console.log("Displaying shoot: " + ourShoot.title + " (ID> " + ourShoot.id + ")")
+
+								displayShoot(ourShoot.title, ourShoot.id, ourShoot.imgs);
+							});
+
+						}
+					},
+				});
+			}; // loadShoot
+
+			loadShoots();
+			
+
+
+			// Drag and drop upload
+			let dropArea = document.getElementById('content-host');
+
+			dropArea.addEventListener('dragenter', dragAndDrop, false);
+			dropArea.addEventListener('dragenter', ddHighlight, false);
+			dropArea.addEventListener('dragover', dragAndDrop, false);
+			dropArea.addEventListener('dragover', ddHighlight, false);
+
+			dropArea.addEventListener('dragleave', dragAndDrop, false);
+			dropArea.addEventListener('dragleave', ddUnhighlight, false);
+			dropArea.addEventListener('drop', dragAndDrop, false);
+			dropArea.addEventListener('drop', ddUnhighlight, false);
+
+			function ddHighlight(e) {
+				if (!window.highlighed) {
+					window.highlighed = true;
+					dropArea.classList.add('upload-highlighted');
+					console.log("File dragged, ready to upload.");
+				}
+			}
+			function ddUnhighlight(e) {
+				window.highlighed = false;
+				dropArea.classList.remove('upload-highlighted');
+			}
+
+			function dragAndDrop(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+
+			function displayUploadContainer() {
+				$("#back-button").hide();
+				$('.drawer-nav').empty();
+				history.pushState({ view:'upload-container', title:"Upload", drawer:$(".drawer-nav").html() }, ''); // what we ARE looking at
+				$("#image-container").fadeOut(250);
+				$('#shoots-container').fadeOut(250);
+				$('#shoot-container').fadeOut(250);
+
+				setTimeout(function() {
+					$('#upload-container').fadeIn(250);
+				}, 250);
+				$('#upload-preview').empty();
+
+				document.title = "Upload - CNCO Photos"
+			}
+
+			dropArea.addEventListener('drop', (e) => {
+				// dropped
+				displayUploadContainer();
+
+				$("#upload-preview").empty();
+
+				document.getElementById('fileElement').files = e.dataTransfer.files; // you can't really append..
+				let fE = document.getElementById('fileElement').files;
+				console.log(fE);
+
+				// add the previews
+				var numOfPreviews = 0;
+
+				function addPreview(file) {
+					if (numOfPreviews>6)
+						return;
+					var key = file.name.split(".")[0];
+					console.log("Adding upload preview for: " + key)
+					let reader = new FileReader();
+					reader.readAsDataURL(file);
+					reader.onloadend = function() {
+						let img = new Image();
+						img.src = reader.result;
+						img.className = "entry-photo--no-title";
+						$("#upload-preview").append('<li id="' + key + '" class="entry"></li>');
+						$("#" + key).append(img);
+					}
+					numOfPreviews++;
+				}
+
+				// Add image preview
+				//([...fE]).forEach(addPreview);
+
+			}, false);
+
+			function enhanceFormWithUploadProgress(form, progress) {
+
+				//testing browser support. if no support for the required js APIs, the form will just be posted naturally with no progress showing.
+				var xhr = new XMLHttpRequest();
+				if (!(xhr && ('upload' in xhr) && ('onprogress' in xhr.upload)) || !window.FormData) {
+					return;
+				}
+
+				form.addEventListener('submit', function(e) {
+					//prevent regular form posting
+					e.preventDefault();
+
+					xhr.upload.addEventListener('loadstart', function(event) {
+						//initializing the progress indicator (here we're displaying an element that was hidden)
+						document.querySelector('#upload-progress').hidden = false;
+					}, false);
+
+					xhr.upload.addEventListener('progress', function(event) {
+						//displaying the progress value as text percentage, may instead update some CSS to show a bar
+						var percent = (100 * event.loaded / event.total);
+						// progress.innerHTML = 'Progress: ' + percent.toFixed(2) + '%';
+						progress.MaterialProgress.setProgress(percent);
+						console.log("Upload progress: " + percent.toFixed(0) + "%");
+					}, false);
+
+					xhr.upload.addEventListener('load', function(event) {
+						//this will be displayed while the server is handling the response (all upload data has been transmitted by now)
+						// progress.innerHTML = 'Completed, waiting for response...';
+						progress.classList.add("mdl-progress__indeterminate")
+						console.log("Uploaded, awaiting response.");
+					}, false);
+
+					xhr.addEventListener('readystatechange', function(event) {
+						if (event.target.readyState == 4 && event.target.responseText) {
+							data = event.target.responseText.split('\n');
+							response = JSON.parse(data[1]);
+							console.log(response);
+							$("#upload-container").fadeOut(250);
+							$("#shoots-container").fadeIn(250);
+							// Uploaded!
+							if (response.success == true) { 							
+								toastNotification("Upload complete. Now processing");
+							} else if (response.reason == "login_required") {
+								toastNotification("Upload failed. You must login before uploading!");
+
+							}
+							else if (response.reason == "shoot_exists") {
+								toastNotification("Upload failed. ShootID already taken.");
+
+							}
+							else if (response.reason == "shootid_invalid") {
+								toastNotification("Upload failed. ShootID is invalid.");
+
+							}
+							else if (response.reason == "shootTitle_invalid") {
+								toastNotification("Upload failed. Shoot title is invalid.");
+							
+							} else if (response.reason == "not_permitted") {
+								toastNotification("Upload failed. You are not allowed to upload photos.");
+
+							} else if (event.target.responseText == "error") {
+								toastNotification("Error processing upload. Please try again later.");
+							}
+						}
+					}, false);
+
+					//posting the form with the same method and action as specified by the HTML markup
+					xhr.open(this.getAttribute('method'), this.getAttribute('action'), true);
+					xhr.send(new FormData(this));
+
+				});
+
+			};
+			enhanceFormWithUploadProgress(document.getElementById('upload-form'), document.querySelector('#upload-progress'));
+
+			// ShootID checker
+			$("#upload-shootID").on("input propertychange", (event) => {
+				if (window.message) {
+					$("#upload-shootID-error").text("ShootID's can only be alphanumerical, no spaces, and between 1-50 characters.");
+					$("#upload-shootID-error").css("visibility","hidden");
+				}
+
+				if (window.event && event.type == "propertychange" && event.propertyName != "value")
+					return;
+				
+
+				window.clearTimeout($(this).data("timeout"));
+				$(this).data("timeout", setTimeout(function() {
+					// Send the ajax request
+					var shootID = $("#upload-shootID").val();
+					var title = $("#upload-title").val();
+					$.ajax({
+						url: 'upload/validateShoot',
+						contentType: "application/json; charset=utf-8",
+						// dataType: "json",
+						method: 'POST',
+						type: 'POST',
+						data: JSON.stringify({ shootID: shootID, title: title }),
+						success: (data) => {
+							// strip the data, (just use the second line since the first line is known trash)
+							data = data.split('\n');
+							data = JSON.parse(data[1]);
+
+
+							function invalid(reason) {
+								$("#upload-shootID-error").text(reason);
+								$("#upload-shootID-error").css("visibility","visible");
+								$("#upload-shootID-error").css("color","#d50000");
+								window.message = true;
+							}
+
+							console.log("ShootID check: ");
+							console.log(data);
+							if (data.success != true) {
+								if (data.reason == "login_required") {
+									invalid("You must login before uploading!");
+
+								} else if (data.reason == "shoot_exists") {
+									invalid("Shoot ID already taken.");
+
+								} else if (data.reason == "shootid_invalid") {
+									invalid("Invalid shoot ID.");
+
+								} else if (data.reason == "not_permitted") {
+									invalid("You are not allowed to upload photos.");
+
+								} else if (data.reason == "invalid_title") {
+									// the browser will tell them, we used a pattern for this
+
+								} else {
+									invalid("Shoot ID not valid.");
+
+								}	
+							} else {
+								$("#upload-shootID-error").text("ShootID available!");
+								$("#upload-shootID-error").css("visibility","visible");
+								$("#upload-shootID-error").css("color","#00d500");
+							}
+						},
+						error: (msg) => {
+							console.log("Oh god! Error checking if the username is taken... Error:");
+							console.log(msg);
+							$("#upload-shootID-error").text("ShootID *could* be taken, I don't know the lookup failed...");
+							$("#upload-shootID-error").css("visibility","hidden");
+							window.message = true;
+						}
+					});
+				}, 2000));
+			});
+
+
+			function toastNotification(msg, timeout) {
+				if (timeout == undefined)
+					timeout = 2000;
+				var toastNotification = document.querySelector("#toast-notification");
+				toastNotification.MaterialSnackbar.showSnackbar({message: msg, timeout: timeout});
+
+				console.log(`[Toast-Notification] ${msg}`);
+
+				return { 
+					hide: function() {
+						toastNotification.MaterialSnackbar.cleanup_();
+					}
+				} // Hide function
+			}
+
+			window.addEventListener('online', function() {
+				window.offline = false;
+				toastNotification("You're now back online.");
+			});
+			window.addEventListener('offline', function() {
+				window.offline = true;
+				toastNotification("You're now offline!");
+			});
+		</script>
+	</body>
+</html>

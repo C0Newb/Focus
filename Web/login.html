@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    	<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<title>Login - CNCO Photos</title>
+	  
+	  	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+	  
+    	<!-- Bootstrap -->
+		<link href="css/bootstrap-4.3.1.css" rel="stylesheet">
+		<link href="css/login-style.css" rel="stylesheet">
+	
+  </head>
+  <body id="login-bg">
+	  <div id="login-container">
+		  <!-- -->
+		  <form target="_self" action="user/login" method="POST">
+			  <h1 id="login-header">Welcome</h1>
+			  <span id="login-message"></span>
+			  <div style="height: 50px;"></div>
+			  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label login-input">
+				  <input class="mdl-textfield__input" type="username" name="username" id="username" pattern="[a-zA-Z0-9_.]{3,}" maxlength="25" required>
+				  <label class="mdl-textfield__label" for="username">Username</label>
+				  <span class="mdl-textfield__error" for="username" id="usernameError">Username must be at least 3, but no more than 25, characters. (No special characters)</span>
+			  </div>
+			  <br/>
+			  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label login-input">
+				  <input class="mdl-textfield__input" type="password" name="password" id="password" required>
+				  <label class="mdl-textfield__label" for="password">Password</label>
+			  </div>
+			  <input id="sendoff" value="Login" type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect"/>
+		    	<div style="height: 25px;"></div>
+			  
+			  
+		  </form>
+		    <div style="height: 20px;"></div>
+			<button class="center mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='/register'">
+				<a href="/register" class="hide-link">Register</a>
+			</button>
+	  </div>
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+	<script src="js/jquery-3.3.1.min.js"></script>
+
+	<script>
+		$('#login-message').hide();
+		const urlParams = new URLSearchParams(window.location.search);
+		const myParam = urlParams.get('failure');
+		if(myParam == "invalid_credentials") {
+			$('#login-message').show();
+			$("#login-message").text("Invalid username or password.");
+		} else if (myParam == "missing_fields") {
+			$('#login-message').show();
+			$("#login-message").text("Missing required fields. Did you enter your username/password?");
+		} else if (myParam == "login_required") {
+			$('#login-message').show();
+			$("#login-message").text("Login required.");
+		}
+	</script>
+  </body>
+</html>
