@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    	<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Logging out - Focus</title>
+	  
+	  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+	  
+		<link href="css/login-style.css" rel="stylesheet">
+
+		<!-- <meta http-equiv="refresh" content="5; URL=dashboard" /> -->
+  </head>
+  <body id="login-bg">
+	  <div id="login-container">
+		  <!-- so the button just pushes you to the dashboard -->
+		  <div id="form-container">
+				<h3 id="login-header">Logging out...</h1>
+				<button class="center mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onclick="leave()">
+					<a class="hide-link" href="dashboard">Go home</a>
+				</button>
+		  </div>
+	  </div>
+
+	  <!-- Main API -->
+		<script src="js/focus.js"></script>
+
+	  <script>
+	  	function leave() {
+  			window.location.href = "dashboard";
+	  	}
+
+	  	let header = document.getElementById("login-header");
+
+	  	Focus.logoutUser().then(() => {
+	  		header.innerHTML = "Log out successful.";
+	  		setTimeout(() => {
+	  			leave();
+	  		}, 5000);
+	  	}).catch(() => {
+	  		header.innerHTML = "Failed to logout!";
+	  	});
+	  </script>
+  </body>
+</html>
