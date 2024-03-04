@@ -9,7 +9,6 @@
 const express = require('express');
 const router = express.Router();
 
-let NeptuneCrypto = require("../../NeptuneCrypto.js");
 const User = require('../../User.js');
 
 router.get('/register', (req, res) => { res.redirect(303, '/register'); });

@@ -37,12 +37,12 @@ global.Focus.webLog = global.Focus.logMan.getLogger("Web");
 
 const app = express();
 app.use(cookieParser(NeptuneCrypto.randomString(1024)));
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 var upload = multer({
 	dest: path.join(global.dataDirectory, 'uploads'),
 	limits: {
-		fileSize: 40000000, // 40MB
+		fileSize: 80000000, // 80MB
 	},
 	fileFilter: function (req, file, callback) {
         var ext = path.extname(file.originalname);
@@ -54,9 +54,10 @@ var upload = multer({
 }); // For uploads
 
 app.use((req, res, next)=> {
-  Focus.webLog.debug(`${req.method}: ${req.url}. IP(s): "${req.ip || req.ips.join(",")}". Body:`);
-  Focus.webLog.debug(req.body);
-  next();
+	res.setHeader('X-Powered-By', 'Focus');
+	Focus.webLog.debug(`${req.method}: ${req.url}. IP(s): "${req.ip || req.ips.join(",")}". Body:`);
+	Focus.webLog.debug(req.body);
+	next();
 })
 
 
@@ -66,11 +67,13 @@ const httpServer = http.createServer(app);
 // Routes
 const userAPI = require('./API/v1/User.js');
 const shootAPI = require('./API/v1/Shoot.js');
+const batchify = require('./API/v1/Batchify.js');
 
 
 
 app.use('/api/v1/user', userAPI);
 app.use('/api/v1/shoot', shootAPI);
+app.use('/api/v1/batchify', batchify);
 
 
 

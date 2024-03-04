@@ -256,7 +256,7 @@ class ConfigurationManager {
 				
 				files.forEach(file => {
 					try {
-						if (fs.lstatSync(dir + file).isDirectory())
+						if (fs.lstatSync(path.join(dir, file)).isDirectory())
 							if (walkDir(dir + file)==false)
 								return false;
 						if (updateFile(dir + file) === true)

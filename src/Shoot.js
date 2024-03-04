@@ -126,6 +126,12 @@ class Shoot extends ConfigItem{
 	 */
 	getUserPermission(username, imageId) {
 		let permission = "";
+		imageId == (typeof imageId === "string" && imageId.trim() != "")? imageId : "*";
+
+		const uuidRegexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+		if (!uuidRegexExp.test(imageId)) { // uuid or friendly name?
+			imageId = this.getImageId(imageId);
+		}
 
 		if (this.permissions["*"] !== undefined) { // the everyone permissions
 			if (this.permissions["*"]["*"] !== undefined) // applies to all images
@@ -209,6 +215,11 @@ class Shoot extends ConfigItem{
 				result[singleImageId] = this.checkUserHasImagePermission(username, singleImageId, regMatch);
 			});
 			return result;
+		}
+
+		const uuidRegexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+		if (!uuidRegexExp.test(imageId)) { // uuid or friendly name?
+			imageId = this.getImageId(imageId);
 		}
 
 		// single image
@@ -480,6 +491,19 @@ class Shoot extends ConfigItem{
 	 */
 	getImageName(imageId) {
 		return this.imageNames.get(imageId) || imageId;
+	}
+
+	/**
+	 * Returns the UUID of an image given the name.
+	 * @param {string} imageName - Name of the image.
+	 * @return {string}
+	 */
+	getImageId(imageName) {
+		this.imageNames.forEach((name, id) => {
+			if (id.toLowerCase() == imageName.toLowerCase()) {
+				return name;
+			}
+		})
 	}
 
 	/**

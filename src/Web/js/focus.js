@@ -13,7 +13,7 @@ const Focus = {};
  * The api root
  * @type {string}
  */
-Focus.APILocation = "/api/v1/"
+Focus.APILocation = "api/v1/"
 
 
 /**
@@ -327,7 +327,7 @@ Focus.sendRequestRaw = function(method, endpoint, data, options) {
 					resolve(response);
 				}
 			})
-			.catch((reason) => reject);
+			.catch(reject);
 		} catch (e) {
 			console.error(`Error on request ${method} for ${endpoint}.`);
 			console.error(e);
